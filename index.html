@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Raya — Discovery v1.0 · Listra Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#C4965A;--gold-light:#E8C99A;--gold-pale:#F5ECD9;--gold-dark:#8B6332;
+  --black:#0D0D0B;--black-card:#1A1A16;--black-hover:#252520;--black-warm:#2C2A24;
+  --cream:#F5F0E8;--cream-dark:#EDE6D8;--white:#FFFFFF;
+  --text-primary:#1A1914;--text-secondary:#5C5848;--text-muted:#9A9282;
+  --border-light:#E4DDD0;--border-dark:rgba(255,255,255,.08);
+  --blue:#2D6FA3;--blue-bg:#E8F2FB;--green:#3D7A5A;--green-bg:#E0F0E8;
+  --purple:#8B6BA8;--purple-bg:#EFE6F5;--yellow:#A06020;--yellow-bg:#FEF0DB;
+  --teal:#3D7A6E;--teal-bg:#E0F0EC;--red:#C04040;--red-bg:#FAEAEA;
+  --font-display:'Cormorant Garamond',Georgia,serif;--font-body:'Inter',system-ui,sans-serif;
+  --r-sm:6px;--r-btn:8px;--r-card:12px;--r-card-lg:16px;--r-pill:9999px;--sidebar:260px;
+  --shadow-sm:0 1px 4px rgba(13,13,11,.06);--shadow-md:0 4px 16px rgba(13,13,11,.08);
+}
+[data-theme="dark"]{
+  --white:#1A1A16;--cream:#0D0D0B;--cream-dark:#1A1914;
+  --text-primary:#F0EAE0;--text-secondary:#A99E8C;--text-muted:#6A6358;
+  --border-light:rgba(240,234,224,.09);--gold-pale:#2A1E0A;
+  --green-bg:#0d2417;--red-bg:#2a1210;--yellow-bg:#2a2010;--blue-bg:#0e2236;--purple-bg:#1f1733;--teal-bg:#0c2422;
+}
+html{scroll-behavior:smooth;font-size:15px}
+body{font-family:var(--font-body);background:var(--cream);color:var(--text-primary);line-height:1.7;-webkit-font-smoothing:antialiased}
+.sidebar{position:fixed;top:0;left:0;width:var(--sidebar);height:100vh;background:var(--black);overflow-y:auto;z-index:100;padding:24px 0 40px;display:flex;flex-direction:column;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.06) transparent}
+.sidebar::-webkit-scrollbar{width:3px}.sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px}
+.nav-logo{padding:0 20px 20px;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:14px;display:flex;align-items:center;gap:9px}
+.nav-logo svg{flex-shrink:0}
+.nav-logo-text{font-family:var(--font-display);font-size:23px;font-weight:600;color:#fff;line-height:1;letter-spacing:.01em}
+.nav-logo-meta{font-size:10.5px;color:rgba(255,255,255,.28);margin-top:8px;line-height:1.6;padding:0 20px}
+.nav-section{font-size:9px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.22);padding:16px 20px 6px}
+.nav-link{display:flex;align-items:center;gap:8px;padding:7px 20px;font-size:12.5px;color:rgba(255,255,255,.46);text-decoration:none;transition:all .15s;border-left:2px solid transparent}
+.nav-link:hover{color:#fff;background:rgba(255,255,255,.04)}
+.nav-link.active{color:var(--gold);border-left-color:var(--gold);background:rgba(196,150,90,.08)}
+.nav-link .num{font-size:10px;font-family:monospace;color:rgba(255,255,255,.2);min-width:18px}
+.nav-link.active .num{color:var(--gold)}
+.nav-footer{margin-top:auto;padding:16px 20px 0;border-top:1px solid rgba(255,255,255,.07);font-size:10px;color:rgba(255,255,255,.22);line-height:1.7}
+.main{margin-left:var(--sidebar);min-height:100vh}
+.page{max-width:980px;margin:0 auto;padding:48px 44px 100px}
+.dark-toggle{position:fixed;top:18px;right:22px;z-index:200;background:var(--black-card);border:1px solid rgba(255,255,255,.12);color:#fff;padding:7px 14px;border-radius:var(--r-pill);font-size:11.5px;font-family:var(--font-body);cursor:pointer;transition:all .15s}
+.dark-toggle:hover{background:var(--black-hover)}
+.section{margin-bottom:80px;scroll-margin-top:28px}
+.section-label{font-size:10px;font-weight:600;letter-spacing:.15em;text-transform:uppercase;color:var(--text-muted);border-bottom:1px solid var(--border-light);padding-bottom:10px;margin-bottom:26px;display:flex;align-items:center;gap:8px}
+.section-label::before{content:'';width:3px;height:14px;background:var(--gold);border-radius:2px;flex-shrink:0}
+.section-num{font-size:9px;font-family:monospace;color:var(--gold);margin-right:2px}
+.section-lead{font-size:14.5px;color:var(--text-secondary);line-height:1.8;margin-bottom:28px;max-width:760px}
+.hero{background:var(--black);border-radius:var(--r-card-lg);padding:48px;margin-bottom:40px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:420px;height:420px;background:radial-gradient(circle,rgba(196,150,90,.16) 0%,transparent 68%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-50px;left:60px;width:260px;height:260px;background:radial-gradient(circle,rgba(196,150,90,.06) 0%,transparent 70%);pointer-events:none}
+.hero-inner{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:flex-start;gap:32px;flex-wrap:wrap}
+.hero-left{flex:1;min-width:280px}
+.hero-eyebrow{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:16px}
+.hero-title{font-family:var(--font-display);font-size:clamp(28px,3.4vw,46px);color:#fff;line-height:1.12;margin-bottom:18px;font-weight:600}
+.hero-title span{color:var(--gold)}
+.hero-lead{font-size:14.5px;color:rgba(255,255,255,.58);line-height:1.8;max-width:560px}
+.hero-right{display:flex;flex-direction:column;align-items:flex-end;gap:10px;flex-shrink:0}
+.hero-chip{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);border-radius:var(--r-pill);padding:7px 14px 7px 8px}
+.hero-av{width:34px;height:34px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0;font-family:var(--font-display)}
+.hero-av.b{background:rgba(255,255,255,.12);color:rgba(255,255,255,.65)}
+.hero-chip-name{font-size:12.5px;font-weight:600;color:#fff;line-height:1.2}
+.hero-chip-role{font-size:10.5px;color:rgba(255,255,255,.4)}
+.hero-badge{background:var(--gold);color:#fff;font-size:11px;font-weight:700;padding:5px 14px;border-radius:var(--r-pill)}
+.hero-meta{display:flex;gap:28px;flex-wrap:wrap;margin-top:32px;padding-top:24px;border-top:1px solid rgba(255,255,255,.07);position:relative;z-index:1}
+.hero-meta-item strong{display:block;color:#fff;font-size:12.5px;margin-bottom:2px}
+.hero-meta-item{font-size:11px;color:rgba(255,255,255,.35)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:32px}
+.stat-card{background:var(--white);border:1px solid var(--border-light);border-radius:var(--r-card);padding:20px 18px;transition:box-shadow .2s,transform .18s}
+.stat-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.stat-label{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:7px}
+.stat-value{font-size:23px;font-weight:700;color:var(--gold-dark);line-height:1.1;font-family:var(--font-display)}
+[data-theme="dark"] .stat-value{color:var(--gold)}
+.stat-sub{font-size:11px;color:var(--text-muted);margin-top:4px;line-height:1.5}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:22px}
+.card{background:var(--white);border:1px solid var(--border-light);border-radius:var(--r-card);padding:20px}
+.card-dark{background:var(--black-card);border:1px solid var(--border-dark);border-radius:var(--r-card);padding:20px}
+.card-lbl{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted);margin-bottom:11px}
+.card-title{font-size:16px;font-weight:600;color:var(--text-primary);line-height:1.35;margin-bottom:7px;font-family:var(--font-display)}
+.card-body{font-size:13.5px;color:var(--text-secondary);line-height:1.75}
+.card-icon{font-size:22px;margin-bottom:11px;line-height:1}
+.card-foot{font-size:11.5px;color:var(--text-muted);margin-top:9px;font-style:italic;line-height:1.5}
+.insight{background:var(--white);border:1px solid var(--border-light);border-left:4px solid var(--gold);border-radius:0 var(--r-card) var(--r-card) 0;padding:20px 24px;margin:22px 0}
+.insight.risk{border-left-color:var(--red)}
+.insight.info{border-left-color:var(--blue)}
+.insight-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--gold-dark);margin-bottom:9px}
+[data-theme="dark"] .insight-lbl{color:var(--gold)}
+.insight.risk .insight-lbl{color:var(--red)}
+.insight.info .insight-lbl{color:var(--blue)}
+.insight p{font-size:14.5px;font-style:italic;color:var(--text-secondary);line-height:1.85}
+.nota{border-radius:0 var(--r-card) var(--r-card) 0;padding:13px 17px;margin-bottom:14px}
+.nota-gold{background:var(--gold-pale);border-left:3px solid var(--gold)}
+.nota-info{background:var(--blue-bg);border-left:3px solid var(--blue)}
+.nota-caution{background:var(--yellow-bg);border-left:3px solid var(--yellow)}
+.nota-risk{background:var(--red-bg);border-left:3px solid var(--red)}
+.nota-safe{background:var(--green-bg);border-left:3px solid var(--green)}
+.nota-title{font-size:11.5px;font-weight:700;margin-bottom:4px}
+.nota-gold .nota-title{color:var(--gold-dark)}.nota-info .nota-title{color:var(--blue)}.nota-caution .nota-title{color:var(--yellow)}.nota-risk .nota-title{color:var(--red)}.nota-safe .nota-title{color:var(--green)}
+.nota p{font-size:12.5px;line-height:1.7}
+.nota-gold p{color:var(--gold-dark)}.nota-info p{color:var(--blue)}.nota-caution p{color:var(--yellow)}.nota-risk p{color:var(--red)}.nota-safe p{color:var(--green)}
+[data-theme="dark"] .nota-gold p,[data-theme="dark"] .nota-gold .nota-title{color:var(--gold-light)}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:20px}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:500;padding:6px 12px;background:var(--white);border:1px solid var(--border-light);border-radius:var(--r-btn);color:var(--text-secondary)}
+.chip.gold{background:var(--gold-pale);color:var(--gold-dark);border-color:var(--gold-light)}
+.chip.safe{background:var(--green-bg);color:var(--green);border-color:#86EFAC}
+.chip.info{background:var(--blue-bg);color:var(--blue);border-color:#BFDBFE}
+.chip.purple{background:var(--purple-bg);color:var(--purple);border-color:#D7C7E8}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:var(--r-pill)}
+.b-safe{background:var(--green-bg);color:var(--green);border:1px solid #86EFAC}
+.b-caution{background:var(--yellow-bg);color:var(--yellow);border:1px solid #FDE68A}
+.b-risk{background:var(--red-bg);color:var(--red);border:1px solid #FCA5A5}
+.b-info{background:var(--blue-bg);color:var(--blue);border:1px solid #BFDBFE}
+.b-gold{background:var(--gold-pale);color:var(--gold-dark);border:1px solid var(--gold-light)}
+.b-dark{background:var(--black);color:var(--gold);border:1px solid rgba(196,150,90,.3)}
+.comp{background:var(--white);border:1px solid var(--border-light);border-radius:var(--r-card);overflow:hidden;margin-bottom:11px}
+.comp-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;cursor:pointer;gap:14px;transition:background .15s}
+.comp-head:hover{background:var(--cream)}
+.comp-name{font-size:15.5px;font-weight:600;color:var(--text-primary)}
+.comp-sub{font-size:12px;color:var(--text-muted);margin-top:3px;line-height:1.45}
+.comp-badge{font-size:10px;font-weight:700;padding:4px 10px;border-radius:var(--r-sm);white-space:nowrap;flex-shrink:0}
+.cb-high{background:var(--red-bg);color:var(--red)}.cb-med{background:var(--yellow-bg);color:var(--yellow)}.cb-low{background:var(--green-bg);color:var(--green)}.cb-data{background:var(--blue-bg);color:var(--blue)}
+.chevron{font-size:18px;color:var(--text-muted);transition:transform .22s;flex-shrink:0}
+.comp.open .chevron{transform:rotate(180deg)}
+.comp-body{display:none;border-top:1px solid var(--border-light)}
+.comp.open .comp-body{display:block}
+.comp-cols{display:grid;grid-template-columns:1fr 1fr}
+.comp-col{padding:16px 20px}
+.comp-col:first-child{border-right:1px solid var(--border-light)}
+.comp-col-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--text-muted);font-weight:700;margin-bottom:11px;display:block}
+.comp-item{font-size:12.5px;font-weight:500;color:var(--text-secondary);display:flex;align-items:flex-start;gap:7px;margin-bottom:8px;line-height:1.55}
+.i-yes{color:var(--green)}.i-opp{color:var(--gold-dark)}.i-no{color:var(--red)}
+[data-theme="dark"] .i-opp{color:var(--gold)}
+.comp-learn{padding:14px 20px;border-top:1px solid var(--border-light);background:rgba(196,150,90,.05)}
+.swot{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:22px}
+.swot-cell{border-radius:var(--r-card);padding:20px}
+.swot-cell.s{background:var(--green-bg);border:1px solid #86EFAC}
+.swot-cell.w{background:var(--red-bg);border:1px solid #FCA5A5}
+.swot-cell.o{background:var(--blue-bg);border:1px solid #BFDBFE}
+.swot-cell.t{background:var(--yellow-bg);border:1px solid #FDE68A}
+.swot-head{font-size:13.5px;font-weight:700;margin-bottom:13px;font-family:var(--font-display)}
+.swot-cell.s .swot-head{color:#15803D}.swot-cell.w .swot-head{color:#B91C1C}.swot-cell.o .swot-head{color:#1D4ED8}.swot-cell.t .swot-head{color:#B45309}
+.swot-item{font-size:12.5px;line-height:1.65;margin-bottom:8px;display:flex;gap:7px;align-items:flex-start}
+.swot-cell.s .swot-item{color:#14532D}.swot-cell.w .swot-item{color:#7F1D1D}.swot-cell.o .swot-item{color:#1E3A8A}.swot-cell.t .swot-item{color:#78350F}
+.swot-bullet{flex-shrink:0;font-weight:700;opacity:.6}
+.status-banner{display:flex;align-items:center;gap:14px;background:var(--black);border-radius:var(--r-card-lg);padding:20px 26px;margin-top:20px}
+.status-dot{width:9px;height:9px;border-radius:50%;background:var(--gold);flex-shrink:0;box-shadow:0 0 0 4px rgba(196,150,90,.2)}
+.status-text{font-size:13px;color:rgba(255,255,255,.75);line-height:1.6;flex:1}
+.status-badge{background:var(--gold);color:#fff;font-size:11px;font-weight:700;padding:6px 14px;border-radius:var(--r-pill);white-space:nowrap;flex-shrink:0}
+.code-block{background:var(--black);color:#D8CFC0;border-radius:var(--r-card);padding:18px 22px;font-family:monospace;font-size:12px;line-height:1.85;margin:18px 0;overflow-x:auto}
+.code-block .g{color:#7EE2C6}.code-block .w{color:var(--gold-light);font-weight:700}
+.opp-row{display:flex;gap:16px;align-items:flex-start;background:var(--white);border:1px solid var(--border-light);border-radius:var(--r-card);padding:18px 20px;margin-bottom:11px}
+.opp-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.opp-title{font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:6px}
+.opp-body{font-size:12.5px;color:var(--text-secondary);line-height:1.7}
+.opp-tag{display:inline-block;font-size:10.5px;font-weight:700;padding:3px 10px;border-radius:var(--r-pill);margin-top:8px}
+.sprint-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.sprint-card{background:var(--white);border:1px solid var(--border-light);border-radius:var(--r-card);overflow:hidden}
+.sprint-head{padding:16px 20px;color:#fff}
+.sprint-head.sp-1{background:var(--gold)}
+.sprint-head.sp-2{background:var(--black)}
+.sprint-label{font-size:10px;text-transform:uppercase;letter-spacing:.1em;opacity:.8;margin-bottom:4px}
+.sprint-title{font-size:16px;font-weight:700;font-family:var(--font-display)}
+.sprint-body{padding:16px 20px}
+.sprint-item{font-size:13px;color:var(--text-secondary);padding:7px 0;border-bottom:1px solid var(--border-light);display:flex;gap:8px}
+.sprint-item:last-child{border-bottom:none}
+.sp-blt{font-weight:700;flex-shrink:0}
+.rm-track{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.rm-col{background:var(--white);border:1px solid var(--border-light);border-radius:var(--r-card);padding:18px}
+.rm-col-head{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding-bottom:10px;margin-bottom:12px;border-bottom:2px solid}
+.rm-col.v1 .rm-col-head{color:var(--gold-dark);border-color:var(--gold)}
+[data-theme="dark"] .rm-col.v1 .rm-col-head{color:var(--gold)}
+.rm-col.v2 .rm-col-head{color:var(--blue);border-color:var(--blue)}
+.rm-col.v3 .rm-col-head{color:var(--purple);border-color:var(--purple)}
+.rm-item{font-size:12.5px;color:var(--text-secondary);padding:6px 0;display:flex;gap:8px;align-items:flex-start;line-height:1.5}
+.rm-dot{flex-shrink:0;font-size:13px}
+.risk-list{display:flex;flex-direction:column;gap:11px}
+.risk-row{display:flex;gap:14px;background:var(--white);border:1px solid var(--border-light);border-radius:var(--r-card);padding:16px 20px;align-items:flex-start}
+.risk-sev{font-size:10px;font-weight:700;padding:4px 10px;border-radius:var(--r-sm);white-space:nowrap;flex-shrink:0;margin-top:2px}
+.rs-h{background:var(--red-bg);color:var(--red)}.rs-m{background:var(--yellow-bg);color:var(--yellow)}.rs-l{background:var(--green-bg);color:var(--green)}
+.risk-title{font-size:13.5px;font-weight:600;color:var(--text-primary);margin-bottom:5px}
+.risk-desc{font-size:12.5px;color:var(--text-secondary);line-height:1.7}
+.risk-desc strong{color:var(--text-primary)}
+.score-ring{width:74px;height:74px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;border:5px solid}
+.score-ring.s{border-color:var(--green)}.score-ring.c{border-color:var(--yellow)}.score-ring.r{border-color:var(--red)}
+.score-num{font-size:18px;font-weight:700;color:var(--text-primary);font-family:var(--font-display)}
+.score-lbl{font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em}
+.ai-tag{display:inline-block;font-size:10px;font-weight:700;padding:3px 9px;border-radius:var(--r-pill);background:var(--purple-bg);color:var(--purple);margin-top:8px}
+table.cmp{width:100%;border-collapse:collapse;font-size:12.5px;margin:14px 0}
+table.cmp th{background:var(--black);color:#fff;padding:10px 14px;text-align:left;font-weight:600;font-size:11.5px}
+table.cmp td{padding:10px 14px;border-bottom:1px solid var(--border-light);color:var(--text-secondary);vertical-align:top}
+table.cmp tr:nth-child(even){background:var(--cream)}
+table.cmp td.dim{font-weight:600;color:var(--text-primary);white-space:nowrap}
+table.cmp td.sol{background:rgba(139,92,246,.04)}
+table.cmp td.ori{background:rgba(196,150,90,.05)}
+.price-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.price-card{background:var(--white);border:1px solid var(--border-light);border-radius:var(--r-card);padding:18px;text-align:center}
+.price-card.feat{border:2px solid var(--gold);position:relative}
+.price-plan{font-size:13px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.price-val{font-size:21px;font-weight:700;font-family:var(--font-display);color:var(--text-primary);margin-bottom:4px}
+.price-sub{font-size:11px;color:var(--text-muted);margin-bottom:12px}
+.price-feat{font-size:11.5px;color:var(--text-secondary);text-align:left;line-height:1.7}
+.timeline{position:relative;padding-left:28px;margin:18px 0}
+.timeline::before{content:'';position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:var(--border-light)}
+.tl-item{position:relative;margin-bottom:18px;padding-bottom:4px}
+.tl-item::before{content:'';position:absolute;left:-28px;top:3px;width:14px;height:14px;border-radius:50%;background:var(--gold);border:3px solid var(--white)}
+.tl-date{font-size:10.5px;font-weight:700;color:var(--gold-dark);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+[data-theme="dark"] .tl-date{color:var(--gold)}
+.tl-title{font-size:14px;font-weight:600;color:var(--text-primary);margin-bottom:4px}
+.tl-body{font-size:12.5px;color:var(--text-secondary);line-height:1.65}
+.persona-card{display:flex;gap:12px;align-items:flex-start}
+.persona-av{width:44px;height:44px;border-radius:50%;background:var(--gold-pale);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.name-tag{display:flex;align-items:flex-start;gap:11px;margin-bottom:13px}
+.name-av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;font-size:13px;font-family:var(--font-display)}
+.name-fullname{font-size:15px;font-weight:600}
+.name-role{font-size:11.5px;font-weight:600;margin-top:1px}
+.category-pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 12px;border-radius:var(--r-pill)}
+.cat-ambar{background:#F4E4D7;color:#8B5A2B}
+.cat-safira{background:#E1ECF7;color:#2D5C8B}
+.cat-rubi{background:#F8E0E0;color:#A33333}
+.cat-diamante{background:var(--black);color:var(--gold)}
+@media(max-width:1000px){.g2,.g3,.g4,.g5,.swot,.sprint-grid,.rm-track,.price-grid{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}}
+@media print{.sidebar,.dark-toggle{display:none}.main{margin-left:0}}
+</style>
+</head>
+<body>
+
+<button class="dark-toggle" onclick="document.documentElement.toggleAttribute('data-theme');this.textContent=document.documentElement.hasAttribute('data-theme')?'☀️ Claro':'🌙 Escuro'">🌙 Escuro</button>
+
+<nav class="sidebar">
+  <div class="nav-logo">
+    <svg width="26" height="26" viewBox="0 0 100 100" fill="none">
+      <circle cx="50" cy="50" r="36" stroke="#C4965A" stroke-width="5" fill="none" stroke-dasharray="180 60"/>
+      <path d="M50 24 L56 42 L74 48 L56 54 L50 72 L44 54 L26 48 L44 42 Z" fill="#C4965A"/>
+    </svg>
+    <span class="nav-logo-text">RAYA</span>
+  </div>
+  <div class="nav-logo-meta">Discovery v1.0 · Listra Digital<br>Fidelização &amp; Gestão de Salão</div>
+
+  <div class="nav-section">Contexto</div>
+  <a href="#origem" class="nav-link active"><span class="num">01</span>Como tudo começou</a>
+  <a href="#oportunidade" class="nav-link"><span class="num">02</span>O nicho e a oportunidade</a>
+  <a href="#cliente" class="nav-link"><span class="num">03</span>O cliente — Raro Beauty Club</a>
+  <a href="#personas" class="nav-link"><span class="num">04</span>Perfis de usuário</a>
+
+  <div class="nav-section">Produto</div>
+  <a href="#visao" class="nav-link"><span class="num">05</span>Visão geral do produto</a>
+  <a href="#categorias" class="nav-link"><span class="num">06</span>Sistema de categorias</a>
+  <a href="#conquistas" class="nav-link"><span class="num">07</span>Árvore de conquistas</a>
+  <a href="#engajamento" class="nav-link"><span class="num">08</span>Missões, quiz e ranking</a>
+  <a href="#prontuario" class="nav-link"><span class="num">09</span>Prontuário e Raya IA</a>
+  <a href="#loja" class="nav-link"><span class="num">10</span>Loja virtual integrada</a>
+
+  <div class="nav-section">Decisão Técnica</div>
+  <a href="#blump" class="nav-link"><span class="num">11</span>Por que não o Blump</a>
+  <a href="#comparativo" class="nav-link"><span class="num">12</span>Lovable vs Replit</a>
+  <a href="#arquitetura" class="nav-link"><span class="num">13</span>Arquitetura recomendada</a>
+  <a href="#criticas" class="nav-link"><span class="num">14</span>Funcionalidades críticas</a>
+  <a href="#boaspraticas" class="nav-link"><span class="num">15</span>Checklist anti-latência</a>
+
+  <div class="nav-section">Execução</div>
+  <a href="#roadmap" class="nav-link"><span class="num">16</span>Roadmap V1 / V2</a>
+  <a href="#estimativa" class="nav-link"><span class="num">17</span>Estimativa e prazos</a>
+  <a href="#design" class="nav-link"><span class="num">18</span>Caminho de design</a>
+  <a href="#riscos" class="nav-link"><span class="num">19</span>Riscos e mitigações</a>
+  <a href="#legal" class="nav-link"><span class="num">20</span>Conformidade legal</a>
+  <a href="#time" class="nav-link"><span class="num">21</span>Time e papéis</a>
+  <a href="#proximos" class="nav-link"><span class="num">22</span>Próximos passos</a>
+
+  <div class="nav-footer">Documento vivo — atualizado<br>conforme o discovery avança.<br>Uso interno · Listra Digital</div>
+</nav>
+
+<main class="main">
+<div class="page">
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-eyebrow">Discovery de Produto · Junho 2026</div>
+      <div class="hero-title">Do checklist na recepção<br>ao membro <span>exclusivo</span> do clube.</div>
+      <p class="hero-lead">O Raya nasce para transformar o relacionamento entre o Raro Beauty Club e suas clientes — de transacional para relacional. Um app de fidelização, gamificação e inteligência capilar, com identidade própria, pensado desde o início para escalar como produto white-label para outros salões.</p>
+    </div>
+    <div class="hero-right">
+      <div class="hero-chip"><div class="hero-av">MC</div><div><div class="hero-chip-name">Mariana Chebly</div><div class="hero-chip-role">Liderança Listra · condução do discovery</div></div></div>
+      <div class="hero-chip"><div class="hero-av b">LC</div><div><div class="hero-chip-name">Lívia Couto</div><div class="hero-chip-role">PO · coordenação do estudo técnico</div></div></div>
+      <span class="hero-badge">Avaliação técnica em andamento</span>
+    </div>
+  </div>
+  <div class="hero-meta">
+    <div class="hero-meta-item"><strong>Origem</strong>Indicação da Mariana via relação pessoal com o salão</div>
+    <div class="hero-meta-item"><strong>Cliente</strong>Raro Beauty Club — salão em expansão, Belo Horizonte</div>
+    <div class="hero-meta-item"><strong>Status</strong>ERU completa recebida · estudo Lovable vs Replit entregue</div>
+    <div class="hero-meta-item"><strong>Ambição</strong>Produto white-label para venda a outros salões</div>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat-card"><div class="stat-label">Páginas da ERU recebida</div><div class="stat-value">29</div><div class="stat-sub">Escopo maduro, com regras de negócio e glossário</div></div>
+  <div class="stat-card"><div class="stat-label">Categorias de fidelização</div><div class="stat-value">4</div><div class="stat-sub">Âmbar, Safira, Rubi e Diamante — ciclo semestral</div></div>
+  <div class="stat-card"><div class="stat-label">Ramos da Árvore de Conquistas</div><div class="stat-value">5</div><div class="stat-sub">15 badges vitalícios possíveis por cliente</div></div>
+  <div class="stat-card"><div class="stat-label">Estimativa de build (dupla)</div><div class="stat-value">~18-20 dias</div><div class="stat-sub">V1 + V2 completas, segundo estudo do Marco</div></div>
+</div>
+
+<!-- 01 ORIGEM -->
+<div class="section" id="origem">
+  <div class="section-label"><span class="section-num">01</span>Como tudo começou</div>
+  <p class="section-lead">O Raya não nasceu de um briefing formal de vendas — nasceu de uma conversa pessoal da Mariana com um amigo de longa data que construiu um salão de beleza de pequeno porte até se tornar uma referência em Belo Horizonte.</p>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-lbl">O ponto de partida</div>
+      <p style="font-family:var(--font-display);font-size:19px;color:var(--text-primary);line-height:1.35;margin-bottom:11px;font-weight:600">Um amigo que cresceu junto com o próprio salão</p>
+      <p class="card-body">O Anderson, dono do Raro Beauty Club, é amigo da Mariana desde jovem — os dois são de Itaguara. Ele começou pequeno, trabalhando como cabeleireiro, e foi construindo o salão até virar uma operação grande, com equipe própria. Seu namorado, formado em área técnica e com experiência prévia em projetos de TI em empresas grandes, assumiu a gestão do salão e trouxe uma visão de produto mais estruturada para o negócio.</p>
+    </div>
+    <div class="card">
+      <div class="card-lbl">A virada — eles já chegaram com proposta em mãos</div>
+      <p class="card-body" style="margin-bottom:10px">A dupla já havia contatado uma empresa especializada em apps de gamificação e fidelidade, com cases em parcerias com marcas grandes do setor de beleza. Mariana apresentou o Blump como alternativa, mas o público que eles querem atingir — mais exclusivo, no modelo de clube de membros — exigia funcionalidades fora do escopo atual do produto.</p>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green);font-weight:700;flex-shrink:0">✓</span><span class="card-body">Telas e protótipos visuais já elaborados</span></div>
+        <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green);font-weight:700;flex-shrink:0">✓</span><span class="card-body">ERU completa de 29 páginas, com regras de negócio</span></div>
+        <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green);font-weight:700;flex-shrink:0">✓</span><span class="card-body">Visão clara de produto e intenção de escalar</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-lbl">O que isso mudou no discovery</div>
+    <p>Não é um discovery do zero — é um discovery de viabilidade técnica e comercial sobre um produto já desenhado pelo cliente. O trabalho da Listra aqui não é descobrir o que construir, mas decidir como construir com segurança, performance e abertura para escalar.</p>
+  </div>
+
+  <div class="nota nota-gold">
+    <div class="nota-title">A decisão de entrar ou não</div>
+    <p>Mariana foi clara: o nicho de beleza "não tem erro" — é um setor que movimenta muito dinheiro e tem alta recorrência de consumo. A questão não é se o produto vale a pena, mas se a Listra tem capacidade de assumir mais uma frente de produto agora. A decisão de entrar como parceira de desenvolvimento, ou apenas orientar o cliente sobre como construir, depende da estimativa de esforço levantada neste documento.</p>
+  </div>
+</div>
+
+<!-- 02 OPORTUNIDADE -->
+<div class="section" id="oportunidade">
+  <div class="section-label"><span class="section-num">02</span>O nicho e a oportunidade</div>
+  <p class="section-lead">O mercado de fidelização para salões de beleza já tem players validando a tese — o diferencial do Raya está em ir além do cashback genérico e criar uma experiência de clube exclusivo, com gamificação profunda e IA especializada em colorimetria.</p>
+
+  <div class="g3">
+    <div class="card" style="border-top:3px solid var(--gold)">
+      <div class="card-icon">💰</div>
+      <div class="card-title">Um setor que movimenta muito dinheiro</div>
+      <p class="card-body">O consumo recorrente em salões de beleza é alto e resiliente — clientes fiéis retornam mensalmente, e o ticket médio cresce conforme a cliente avança em serviços de coloração, tratamento e experiências. É um nicho de fidelização com fundamento real de retenção.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--gold)">
+      <div class="card-icon">🏆</div>
+      <div class="card-title">Concorrência já validando a tese</div>
+      <p class="card-body">Outras empresas de fidelização — incluindo uma com cases em redes grandes do setor de beleza — já buscam esse nicho e adaptam produtos genéricos de fidelização para ele. Isso confirma que existe demanda real, mas também sinaliza que a janela de diferenciação não é infinita.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--gold)">
+      <div class="card-icon">🚪</div>
+      <div class="card-title">Intenção de escalar para outros salões</div>
+      <p class="card-body">O cliente não quer apenas um app para o próprio salão — quer transformar isso em produto para vender a terceiros. Isso eleva a régua de qualidade arquitetural desde o primeiro dia: multi-tenant, configurabilidade total e identidade visual plugável por cliente.</p>
+    </div>
+  </div>
+
+  <div class="opp-row" style="background:var(--black);border:none">
+    <div class="opp-icon" style="background:rgba(196,150,90,.15)">🗺️</div>
+    <div style="flex:1">
+      <div class="opp-title" style="color:#fff">O que diferencia o Raya de um programa de cashback comum</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:11px">
+        <div style="font-size:12.5px;color:rgba(255,255,255,.65);display:flex;gap:7px"><span style="color:var(--gold)">→</span>Categorias semestrais com benefícios reais, não só desconto</div>
+        <div style="font-size:12.5px;color:rgba(255,255,255,.65);display:flex;gap:7px"><span style="color:var(--gold)">→</span>Árvore de Conquistas vitalícia, independente do ciclo de pontos</div>
+        <div style="font-size:12.5px;color:rgba(255,255,255,.65);display:flex;gap:7px"><span style="color:var(--gold)">→</span>Quiz ao vivo competitivo, gerando pico de engajamento</div>
+        <div style="font-size:12.5px;color:rgba(255,255,255,.65);display:flex;gap:7px"><span style="color:var(--gold)">→</span>IA especializada em colorimetria capilar para profissionais</div>
+        <div style="font-size:12.5px;color:rgba(255,255,255,.65);display:flex;gap:7px"><span style="color:var(--gold)">→</span>Prontuário digital com histórico de receita e evolução visual</div>
+        <div style="font-size:12.5px;color:rgba(255,255,255,.65);display:flex;gap:7px"><span style="color:var(--gold)">→</span>Relatório semestral estilo "Wrapped" — marketing orgânico embutido</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 03 CLIENTE -->
+<div class="section" id="cliente">
+  <div class="section-label"><span class="section-num">03</span>O cliente — Raro Beauty Club</div>
+  <p class="section-lead">Entender quem é o cliente e o que ele já trouxe de material ajuda a calibrar o nível de confiança da estimativa — esse não é um cliente que chegou com uma ideia vaga.</p>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-lbl">Perfil do salão</div>
+      <p class="card-body">Salão de porte grande em Belo Horizonte, em forte crescimento. Hoje conta com equipe própria de profissionais. A gestão é compartilhada entre o Anderson, fundador e referência técnica, e seu namorado, responsável pela visão de produto e estruturação do projeto — com background técnico relevante para diálogo direto com a equipe de desenvolvimento.</p>
+    </div>
+    <div class="card">
+      <div class="card-lbl">Material já entregue pelo cliente</div>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green);font-weight:700;flex-shrink:0">✓</span><span class="card-body">ERU completa — Especificação de Requisitos do Usuário, 29 páginas</span></div>
+        <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green);font-weight:700;flex-shrink:0">✓</span><span class="card-body">Protótipos visuais gerados via IA, com direção de layout elegante</span></div>
+        <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--green);font-weight:700;flex-shrink:0">✓</span><span class="card-body">Mapa de telas completo para os três perfis de usuário</span></div>
+        <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--yellow);font-weight:700;flex-shrink:0">~</span><span class="card-body">Sem arquivo Figma estruturado — apenas imagens estáticas de referência</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nota nota-info">
+    <div class="nota-title">Ansiedade do cliente é um fator real</div>
+    <p>O cliente já demonstrou estar avaliando contratar a outra empresa enquanto aguarda o retorno da Listra. Isso não deve forçar uma decisão técnica precipitada, mas precisa ser comunicado com transparência — entregar uma estimativa por etapas (V1 publicável, V2 completa) é a forma de reduzir essa ansiedade sem comprometer qualidade.</p>
+  </div>
+</div>
+
+<!-- 04 PERSONAS -->
+<div class="section" id="personas">
+  <div class="section-label"><span class="section-num">04</span>Perfis de usuário</div>
+  <p class="section-lead">O Raya opera com três perfis distintos, cada um com experiência, funcionalidades e nível de acesso próprios. O login é unificado — o sistema detecta o perfil automaticamente após autenticação.</p>
+
+  <div class="g3">
+    <div class="card" style="border-top:3px solid var(--gold)">
+      <div class="card-icon">👑</div>
+      <div class="card-title">Admin / Gestora</div>
+      <p class="card-body">Proprietária ou gestora do salão. Acesso total: configuração de identidade visual, personalização do programa de fidelidade, gestão de conteúdo, produtos e relatórios completos de faturamento e engajamento.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--blue)">
+      <div class="card-icon">💇</div>
+      <div class="card-title">Profissional</div>
+      <p class="card-body">Coloristas e cabeleireiros. Acesso ao prontuário completo das clientes, registro de receitas técnicas de coloração, biblioteca de receitas salvas e chat técnico com a Raya para diagnóstico e cálculo.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--green)">
+      <div class="card-icon">✨</div>
+      <div class="card-title">Cliente</div>
+      <p class="card-body">Clientes do salão. Acesso à gamificação, loja, feed, prontuário simplificado e chat com a Raya em modo acolhedor — nunca vê valores financeiros, apenas pontos e progresso.</p>
+    </div>
+  </div>
+
+  <div class="insight info">
+    <div class="insight-lbl">Privacidade entre perfis é regra de negócio, não detalhe técnico</div>
+    <p>A ERU é explícita: dados de uma cliente nunca são exibidos para outra, receitas técnicas de coloração são visíveis apenas para profissionais e admin, e o histórico financeiro real é exclusivo do painel administrativo. Isso precisa estar refletido desde o modelo de dados, não como camada de UI adicionada depois.</p>
+  </div>
+</div>
+
+<!-- 05 VISAO -->
+<div class="section" id="visao">
+  <div class="section-label"><span class="section-num">05</span>Visão geral do produto</div>
+  <p class="section-lead">O Raya combina fidelização, prontuário digital, inteligência artificial especializada e comércio integrado em uma única plataforma — com identidade visual e configurações totalmente personalizáveis pelo Admin.</p>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-lbl">Objetivos estratégicos do produto</div>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--gold);font-weight:700;flex-shrink:0">→</span><span class="card-body">Aumentar frequência de visitas via gamificação e recompensas progressivas</span></div>
+        <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--gold);font-weight:700;flex-shrink:0">→</span><span class="card-body">Fidelizar com programa de categorias semestral e benefícios reais</span></div>
+        <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--gold);font-weight:700;flex-shrink:0">→</span><span class="card-body">Gerar receita adicional via loja virtual com recomendação personalizada</span></div>
+        <div style="display:flex;gap:8px;align-items:flex-start"><span style="color:var(--gold);font-weight:700;flex-shrink:0">→</span><span class="card-body">Posicionar o salão como referência em experiência do cliente</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-lbl">Princípio central de comunicação</div>
+      <p style="font-family:var(--font-display);font-size:19px;color:var(--text-primary);line-height:1.35;margin-bottom:11px;font-weight:600">A cliente nunca vê valores financeiros</p>
+      <p class="card-body">Todo o faturamento real é traduzido em pontos. A categoria, os benefícios e os alertas de progresso são sempre comunicados em serviços e experiências — nunca em reais. Essa é a regra que sustenta toda a camada de gamificação e que precisa ser garantida tecnicamente, não apenas na interface.</p>
+    </div>
+  </div>
+
+  <div class="chips">
+    <span class="chip gold">3 perfis de acesso</span>
+    <span class="chip">IA com personalidade configurável</span>
+    <span class="chip">Identidade visual white-label</span>
+    <span class="chip safe">Mobile first</span>
+    <span class="chip info">Tempo real — quiz e ranking</span>
+  </div>
+</div>
+
+<!-- 06 CATEGORIAS -->
+<div class="section" id="categorias">
+  <div class="section-label"><span class="section-num">06</span>Sistema de categorias — fidelização semestral</div>
+  <p class="section-lead">O coração do programa. Clientes são classificadas em quatro níveis com base no faturamento gerado ao salão dentro de cada semestre — mas só veem pontos.</p>
+
+  <div class="g4">
+    <div class="card" style="text-align:center">
+      <span class="category-pill cat-ambar">🟤 Âmbar</span>
+      <p class="card-body" style="margin-top:10px">Até R$ 3.000/semestre · 1 cupom de sorteio</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <span class="category-pill cat-safira">💙 Safira</span>
+      <p class="card-body" style="margin-top:10px">R$ 3.001–6.000/semestre · 2 cupons</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <span class="category-pill cat-rubi">❤️ Rubi</span>
+      <p class="card-body" style="margin-top:10px">R$ 6.001–18.000/semestre · 3 cupons</p>
+    </div>
+    <div class="card" style="text-align:center">
+      <span class="category-pill cat-diamante">🔷 Diamante</span>
+      <p class="card-body" style="margin-top:10px">R$ 18.001+/semestre · 4 cupons</p>
+    </div>
+  </div>
+
+  <div class="card-lbl" style="margin-bottom:10px">Lógica do ciclo semestral</div>
+  <div class="timeline">
+    <div class="tl-item"><div class="tl-date">Semestre A</div><div class="tl-title">Acúmulo de pontos</div><div class="tl-body">A cliente acumula pontos via serviços realizados. Ao encerrar, o sistema calcula a categoria atingida.</div></div>
+    <div class="tl-item"><div class="tl-date">Semestre B</div><div class="tl-title">Usufruto e nova medição simultânea</div><div class="tl-body">A cliente usufrui da categoria conquistada enquanto o sistema mede o novo faturamento em paralelo.</div></div>
+    <div class="tl-item"><div class="tl-date">Virada de semestre</div><div class="tl-title">Comparação e ajuste automático</div><div class="tl-body">Se superar o faturamento anterior, sobe de categoria. Se ficar abaixo do mínimo, sofre downgrade automático — sem manutenção parcial.</div></div>
+  </div>
+
+  <div class="nota nota-caution">
+    <div class="nota-title">Comunicação de risco de downgrade é estratégica</div>
+    <p>A Raya alerta a cliente nos meses 4 e 5 do semestre, e nas últimas semanas, sempre traduzindo pontos faltantes em tipos de serviço — nunca em valores. Exemplo da própria ERU: "Faltam 15 dias para fechar o semestre. Você está a 800 pontos de manter seu Diamante — equivale a uma visita completa."</p>
+  </div>
+</div>
+
+<!-- 07 CONQUISTAS -->
+<div class="section" id="conquistas">
+  <div class="section-label"><span class="section-num">07</span>Árvore de Conquistas</div>
+  <p class="section-lead">Camada independente e permanente. Enquanto as categorias resetam semestralmente, as conquistas são vitalícias — uma vez obtidas, pertencem à cliente para sempre.</p>
+
+  <div class="g5">
+    <div class="card" style="text-align:center;padding:16px"><div class="card-icon" style="margin-bottom:6px">🔥</div><div class="card-title" style="font-size:13.5px">Embaixadora</div><p class="card-body" style="font-size:11.5px">Indicações e avaliações</p></div>
+    <div class="card" style="text-align:center;padding:16px"><div class="card-icon" style="margin-bottom:6px">🧠</div><div class="card-title" style="font-size:13.5px">Mestre da Beleza</div><p class="card-body" style="font-size:11.5px">Quizzes e conhecimento</p></div>
+    <div class="card" style="text-align:center;padding:16px"><div class="card-icon" style="margin-bottom:6px">📸</div><div class="card-title" style="font-size:13.5px">Estrela do Feed</div><p class="card-body" style="font-size:11.5px">Conteúdo e engajamento</p></div>
+    <div class="card" style="text-align:center;padding:16px"><div class="card-icon" style="margin-bottom:6px">📅</div><div class="card-title" style="font-size:13.5px">Presença Estratégica</div><p class="card-body" style="font-size:11.5px">Consistência e variedade</p></div>
+    <div class="card" style="text-align:center;padding:16px"><div class="card-icon" style="margin-bottom:6px">💝</div><div class="card-title" style="font-size:13.5px">Comunidade</div><p class="card-body" style="font-size:11.5px">Interação e indicação</p></div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-lbl">Estrutura e complexidade real</div>
+    <p>5 ramos × 3 estágios = 15 badges possíveis por cliente. Cada estágio desbloqueia 3 opções de benefício vitalício, escolhidas uma única vez e registradas permanentemente — uma lógica de progressão e persistência que precisa estar bem modelada no banco desde o início, já que não é afetada por downgrade de categoria.</p>
+  </div>
+</div>
+
+<!-- 08 ENGAJAMENTO -->
+<div class="section" id="engajamento">
+  <div class="section-label"><span class="section-num">08</span>Missões, quiz relâmpago e ranking</div>
+  <p class="section-lead">A camada de engajamento diário e os eventos competitivos são o motor que traz a cliente de volta ao app — e o ranking semestral cria competição saudável visível para toda a comunidade.</p>
+
+  <div class="g3">
+    <div class="card">
+      <div class="card-icon">📋</div>
+      <div class="card-title">Missões diárias, semanais e sazonais</div>
+      <p class="card-body">Abrir o app, ver o feed, avaliar atendimento, indicar amiga. Streaks geram multiplicador de pontos crescente — 7 dias = 1,2x, 14 dias = 1,5x, 30 dias = 2x.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚡</div>
+      <div class="card-title">Quiz Relâmpago — competitivo e ao vivo</div>
+      <p class="card-body">Evento criado pelo Admin sem frequência fixa. A primeira cliente a acertar 100% vence em tempo real. Placar ao vivo com top 5, timer regressivo e revelação simultânea da vencedora.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🏅</div>
+      <div class="card-title">Ranking semestral</div>
+      <p class="card-body">Top 10 público, único para todas as categorias, atualizado em tempo real. Premiação ao final do semestre, incluindo o relatório "Seu Semestre em Beleza" estilo Spotify Wrapped.</p>
+    </div>
+  </div>
+
+  <div class="nota nota-risk">
+    <div class="nota-title">Esse é o bloco de maior risco técnico do projeto</div>
+    <p>Quiz com sincronização de timestamp exato, ranking atualizado em tempo real e revelação simultânea para todas as participantes exigem WebSockets estáveis — funcionalidade que se mostrou frágil em WebView durante o estudo técnico. Ver seção 12 e 14 para detalhamento.</p>
+  </div>
+</div>
+
+<!-- 09 PRONTUARIO -->
+<div class="section" id="prontuario">
+  <div class="section-label"><span class="section-num">09</span>Prontuário digital e Raya — a IA do salão</div>
+  <p class="section-lead">O prontuário é o repositório do histórico de beleza de cada cliente. A Raya, a IA do app, atua de forma completamente diferente dependendo de quem está conversando com ela.</p>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-icon">📁</div>
+      <div class="card-title">Prontuário — visão dupla</div>
+      <p class="card-body">O profissional registra receita técnica completa (marca, linha, tom, oxidante, técnica). A cliente vê uma versão simplificada — linha do tempo visual, nome criativo do resultado, foto e produtos recomendados, sem nenhuma informação técnica de receita.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">💎</div>
+      <div class="card-title">Suporte exclusivo pós-atendimento</div>
+      <p class="card-body">Exclusivo para Rubi e Diamante. Janela de 48h para uma pergunta por atendimento, com resposta prioritária para Diamante. Pergunta e resposta ficam salvas permanentemente no prontuário.</p>
+    </div>
+  </div>
+
+  <div class="g2">
+    <div class="card-dark">
+      <div class="card-lbl" style="color:rgba(255,255,255,.5)">Raya — Modo Cliente</div>
+      <p style="color:rgba(255,255,255,.85);font-size:13.5px;line-height:1.75">Linguagem calorosa e acessível, sem jargões. Celebra conquistas, alerta sobre risco de downgrade de forma motivacional, recomenda produtos de forma consultiva. Nunca revela informações técnicas de receita.</p>
+    </div>
+    <div class="card-dark">
+      <div class="card-lbl" style="color:rgba(255,255,255,.5)">Raya — Modo Profissional</div>
+      <p style="color:rgba(255,255,255,.85);font-size:13.5px;line-height:1.75">Linguagem técnica e direta. Sugestão de receitas com raciocínio colorimétrico explicado, diagnóstico capilar, cálculo de quantidade de produto, alertas de contraindicação e biblioteca técnica de tendências.</p>
+    </div>
+  </div>
+
+  <div class="nota nota-safe">
+    <div class="nota-title">Segurança química está prevista na ERU</div>
+    <p>A Raya sempre alerta sobre riscos em procedimentos agressivos e, em casos de reações alérgicas ou danos ao couro cabeludo, orienta buscar avaliação dermatológica presencial — nunca tenta resolver via app o que exige avaliação profissional.</p>
+  </div>
+</div>
+
+<!-- 10 LOJA -->
+<div class="section" id="loja">
+  <div class="section-label"><span class="section-num">10</span>Loja virtual integrada</div>
+  <p class="section-lead">Canal de venda posicionado contextualmente na jornada da cliente — recomendações consultivas, não anúncios. A retirada no salão é a modalidade estrategicamente incentivada, porque gera uma nova visita.</p>
+
+  <div class="g3">
+    <div class="card">
+      <div class="card-icon">🏠</div>
+      <div class="card-title">Retirada no salão</div>
+      <p class="card-body">Modalidade padrão e estratégica — sem frete, e cada retirada é uma nova oportunidade de visita e abordagem consultiva.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔁</div>
+      <div class="card-title">Recompra inteligente</div>
+      <p class="card-body">A Raya calcula a duração média de cada produto e notifica a cliente no momento estimado de término, sugerindo encomenda antes da próxima visita.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📦</div>
+      <div class="card-title">Assinatura de kit mensal</div>
+      <p class="card-body">Curadoria personalizada pela Raya com base no histórico de produtos usados no prontuário da cliente.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 11 BLUMP -->
+<div class="section" id="blump">
+  <div class="section-label"><span class="section-num">11</span>Por que não o Blump</div>
+  <p class="section-lead">O Blump foi a primeira alternativa apresentada ao cliente, mas a análise da equipe confirmou que o escopo do Raya foge significativamente do produto atual.</p>
+
+  <div class="swot">
+    <div class="swot-cell s">
+      <div class="swot-head">O que se aproveitaria</div>
+      <div class="swot-item"><span class="swot-bullet">+</span>Lógica geral de gamificação e pontos</div>
+      <div class="swot-item"><span class="swot-bullet">+</span>Conceito de painel Admin configurável</div>
+      <div class="swot-item"><span class="swot-bullet">+</span>Parte da estrutura de eventos já em construção</div>
+    </div>
+    <div class="swot-cell w">
+      <div class="swot-head">O que não se encaixa</div>
+      <div class="swot-item"><span class="swot-bullet">−</span>Blump é focado em empresas, Raya é comunidade de clube</div>
+      <div class="swot-item"><span class="swot-bullet">−</span>Quiz ao vivo, prontuário e colorimetria não existem no Blump</div>
+      <div class="swot-item"><span class="swot-bullet">−</span>Layout e identidade visual completamente distintos</div>
+    </div>
+  </div>
+
+  <div class="nota nota-info">
+    <div class="nota-title">A diferença central de filosofia de produto</div>
+    <p>No Blump, o motor é a publicação institucional — a marca publica e o usuário consome. No Raya, o motor é a sensação de pertencimento a um clube: quanto mais a cliente compra e interage, mais ela ganha cashback, pontos e troca por serviços. É fidelização de comunidade, não vitrine corporativa.</p>
+  </div>
+</div>
+
+<!-- 12 COMPARATIVO -->
+<div class="section" id="comparativo">
+  <div class="section-label"><span class="section-num">12</span>Lovable vs Replit — comparativo técnico</div>
+  <p class="section-lead">Estudo conduzido pelo Marco, comparando as duas plataformas para o app mobile do Raya, incluindo prova de conceito prática gerando uma tela a partir de imagem de referência no Replit.</p>
+
+  <table class="cmp">
+    <tr><th>Critério</th><th>Lovable (WebView)</th><th>Replit (React Native / Expo)</th></tr>
+    <tr><td class="dim">Natureza do app</td><td>App web empacotado para mobile</td><td>App nativo compilado para iOS e Android</td></tr>
+    <tr><td class="dim">Performance e latência</td><td>Crítico — overhead de WebView, mesmo risco do Fluxo</td><td>Excelente — componentes nativos, navegação fluida</td></tr>
+    <tr><td class="dim">Curva de aprendizado</td><td>Baixa — equipe já domina</td><td>Baixa — equipe já conhece React/React Native</td></tr>
+    <tr><td class="dim">Publicação na Apple Store</td><td>Alto risco — rejeição por "site encapsulado"</td><td>Baixo risco — artefatos nativos aceitos</td></tr>
+    <tr><td class="dim">Escalabilidade multi-salão</td><td>Limitada — risco de FOUC e cache ao trocar tema</td><td>Alta — tema consultado no login, aplicado nativamente</td></tr>
+    <tr><td class="dim">Dados no Brasil</td><td>Depende do backend integrado</td><td>Controle total — aponta para servidor em São Paulo</td></tr>
+  </table>
+
+  <div class="insight">
+    <div class="insight-lbl">Prova de conceito realizada</div>
+    <p>O Marco gerou a tela de perfil do app a partir de uma imagem estática, sem ajustes manuais, apenas com prompt de IA no Replit. O resultado foi estruturalmente sólido, mas limitado pela ausência de Design Tokens exatos — cores, espaçamentos e componentes reutilizáveis precisam ser "adivinhados" pela IA quando a fonte é só uma imagem.</p>
+  </div>
+
+  <div class="nota nota-caution">
+    <div class="nota-title">Figma acelera, mas tem custo</div>
+    <p>A integração nativa do Replit com Figma extrai Design Tokens exatos e reaproveita componentes mestres, acelerando a geração de telas para um projeto de 29 páginas de especificação. O Marco estimou uma economia de cerca de 20% no tempo total de build — mas alertou que produzir um Figma completo do zero pode pesar mais do que ajudar, especialmente sem a Helen disponível no momento (em férias).</p>
+  </div>
+</div>
+
+<!-- 13 ARQUITETURA -->
+<div class="section" id="arquitetura">
+  <div class="section-label"><span class="section-num">13</span>Arquitetura recomendada</div>
+  <p class="section-lead">A recomendação final do estudo não é escolher uma plataforma — é combinar as duas conforme a força de cada uma.</p>
+
+  <div class="sprint-grid">
+    <div class="sprint-card">
+      <div class="sprint-head sp-1"><div class="sprint-label">App Mobile</div><div class="sprint-title">Cliente e Profissional</div></div>
+      <div class="sprint-body">
+        <div class="sprint-item"><span class="sp-blt">→</span>Replit com React Native / Expo</div>
+        <div class="sprint-item"><span class="sp-blt">→</span>App nativo real, resolvendo performance e latência</div>
+        <div class="sprint-item"><span class="sp-blt">→</span>Suporte estável a WebSockets para o Quiz ao vivo</div>
+        <div class="sprint-item"><span class="sp-blt">→</span>Aprovação na Apple Store facilitada</div>
+      </div>
+    </div>
+    <div class="sprint-card">
+      <div class="sprint-head sp-2"><div class="sprint-label">Painel Admin</div><div class="sprint-title">Web</div></div>
+      <div class="sprint-body">
+        <div class="sprint-item"><span class="sp-blt">→</span>Lovable — onde a plataforma realmente brilha</div>
+        <div class="sprint-item"><span class="sp-blt">→</span>Dashboards e CRUDs entregues com agilidade</div>
+        <div class="sprint-item"><span class="sp-blt">→</span>Sem comprometer a qualidade do app mobile</div>
+        <div class="sprint-item"><span class="sp-blt">→</span>Configuração total: pontos, benefícios, missões</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="status-banner">
+    <div class="status-dot"></div>
+    <div class="status-text">Backend e banco de dados via BaaS (Supabase), obrigatoriamente provisionado em servidor no Brasil (sa-east-1, São Paulo) — mitigando o risco de latência que já afetou o Fluxo.</div>
+    <span class="status-badge">Recomendado</span>
+  </div>
+
+  <div class="nota nota-risk">
+    <div class="nota-title">O risco de ir 100% Lovable via WebView</div>
+    <p>Construir o app mobile inteiramente no Lovable apresenta risco altíssimo para este escopo específico — tempo real, e-commerce e UX premium têm grande chance de recair nos mesmos gargalos de travamento já enfrentados no Fluxo.</p>
+  </div>
+</div>
+
+<!-- 14 CRITICAS -->
+<div class="section" id="criticas">
+  <div class="section-label"><span class="section-num">14</span>Funcionalidades críticas — avaliação detalhada</div>
+  <p class="section-lead">Cinco funcionalidades do escopo carregam o maior risco técnico do projeto. Todas foram avaliadas e têm caminho de solução definido dentro da arquitetura híbrida.</p>
+
+  <div class="comp" onclick="toggleComp('c1')">
+    <div class="comp-head"><div><div class="comp-name">⚡ Quiz Relâmpago ao vivo</div><div class="comp-sub">Sincronização de timestamp, placar ao vivo, encerramento simultâneo</div></div><div style="display:flex;align-items:center;gap:10px"><span class="comp-badge cb-high">Alto risco em WebView</span><span class="chevron">▾</span></div></div>
+    <div class="comp-body" id="c1">
+      <div class="comp-cols">
+        <div class="comp-col"><span class="comp-col-lbl">Lovable</span><div class="comp-item"><span class="i-no">✕</span>Exigiria WebSockets customizados injetados — desconectam em background no WebView</div></div>
+        <div class="comp-col"><span class="comp-col-lbl">Replit (nativo)</span><div class="comp-item"><span class="i-yes">✓</span>Bibliotecas nativas (Socket.io, Supabase Realtime) com resposta em milissegundos via Edge Functions</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp" onclick="toggleComp('c2')">
+    <div class="comp-head"><div><div class="comp-name">🔔 Notificações push inteligentes</div><div class="comp-sub">Streaks, downgrade, aniversário, recompra — gatilhos comportamentais complexos</div></div><div style="display:flex;align-items:center;gap:10px"><span class="comp-badge cb-med">Risco médio</span><span class="chevron">▾</span></div></div>
+    <div class="comp-body" id="c2">
+      <div class="comp-cols">
+        <div class="comp-col"><span class="comp-col-lbl">Lovable</span><div class="comp-item"><span class="i-opp">~</span>Soluções existentes do Fluxo precisam ser validadas — podem falhar no WebView do iOS</div></div>
+        <div class="comp-col"><span class="comp-col-lbl">Replit (nativo)</span><div class="comp-item"><span class="i-yes">✓</span>Integração direta com FCM/Expo Push; lógica de disparo em Cron Jobs no backend</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp" onclick="toggleComp('c3')">
+    <div class="comp-head"><div><div class="comp-name">📁 Prontuário com versionamento de receita</div><div class="comp-sub">Alterações precisam preservar histórico original</div></div><div style="display:flex;align-items:center;gap:10px"><span class="comp-badge cb-low">Baixo risco</span><span class="chevron">▾</span></div></div>
+    <div class="comp-body" id="c3">
+      <div class="comp-cols">
+        <div class="comp-col"><span class="comp-col-lbl">Ambas as plataformas</span><div class="comp-item"><span class="i-yes">✓</span>Complexidade é de banco de dados, não de frontend — tabela append-only resolve em qualquer stack</div></div>
+        <div class="comp-col"><span class="comp-col-lbl">Observação</span><div class="comp-item"><span class="i-opp">~</span>Decisão de arquitetura de dados precisa ser validada antes do início do build</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp" onclick="toggleComp('c4')">
+    <div class="comp-head"><div><div class="comp-name">🎁 Relatório semestral "Wrapped"</div><div class="comp-sub">Artefato visual compartilhável gerado dinamicamente</div></div><div style="display:flex;align-items:center;gap:10px"><span class="comp-badge cb-high">Alto risco em WebView</span><span class="chevron">▾</span></div></div>
+    <div class="comp-body" id="c4">
+      <div class="comp-cols">
+        <div class="comp-col"><span class="comp-col-lbl">Lovable</span><div class="comp-item"><span class="i-no">✕</span>Muito difícil gerar imagem a partir de HTML em WebView mobile para compartilhamento nativo</div></div>
+        <div class="comp-col"><span class="comp-col-lbl">Replit (nativo)</span><div class="comp-item"><span class="i-yes">✓</span>react-native-view-shot captura a tela e chama o Share Dialog nativo do iOS/Android</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp" onclick="toggleComp('c5')">
+    <div class="comp-head"><div><div class="comp-name">🛍️ Loja e assinatura com pagamento</div><div class="comp-sub">Taxas da Apple e políticas de produto físico vs. digital</div></div><div style="display:flex;align-items:center;gap:10px"><span class="comp-badge cb-med">Risco médio</span><span class="chevron">▾</span></div></div>
+    <div class="comp-body" id="c5">
+      <div class="comp-cols">
+        <div class="comp-col"><span class="comp-col-lbl">Solução</span><div class="comp-item"><span class="i-yes">✓</span>Produtos físicos/serviços de salão podem usar gateways externos (Stripe, Pagar.me)</div></div>
+        <div class="comp-col"><span class="comp-col-lbl">Replit (nativo)</span><div class="comp-item"><span class="i-yes">✓</span>Permite in-app browser seguro ou SDKs nativos, com melhor UX que via WebView</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 15 BOAS PRATICAS -->
+<div class="section" id="boaspraticas">
+  <div class="section-label"><span class="section-num">15</span>Checklist de boas práticas — anti-latência</div>
+  <p class="section-lead">Para que o Raya não sofra os mesmos problemas de travamento e lentidão enfrentados no Fluxo, estas regras devem ser aplicadas desde o primeiro commit.</p>
+
+  <div class="g2">
+    <div class="card" style="border-top:3px solid var(--gold)">
+      <div class="card-title" style="font-size:14.5px">1. Infraestrutura localizada</div>
+      <p class="card-body">Banco de dados e backend provisionados obrigatoriamente em sa-east-1 (São Paulo) — reduz latência de ~150ms para ~20ms.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--gold)">
+      <div class="card-title" style="font-size:14.5px">2. Arquitetura offline-first</div>
+      <p class="card-body">Cache local de dados do usuário (pontos, perfil, missões). O app abre instantaneamente mostrando dados em cache enquanto atualiza em segundo plano.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--gold)">
+      <div class="card-title" style="font-size:14.5px">3. Otimização de imagens</div>
+      <p class="card-body">CDN redimensionando fotos do feed e prontuário para WebP on-the-fly — sem carregar imagens pesadas em listas.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--gold)">
+      <div class="card-title" style="font-size:14.5px">4. Paginação obrigatória</div>
+      <p class="card-body">Nenhuma API de lista (feed, histórico, ranking) retorna tudo de uma vez. Paginação e infinite scroll nativo em todas as listagens.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--gold)">
+      <div class="card-title" style="font-size:14.5px">5. Gerenciamento de estado inteligente</div>
+      <p class="card-body">Evitar re-renderizações desnecessárias da árvore de componentes — causa comum de travamento, principalmente em iOS mais antigo.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--gold)">
+      <div class="card-title" style="font-size:14.5px">6. Desacoplamento de tarefas pesadas</div>
+      <p class="card-body">E-mails, push e processamento de IA vão para filas em background — nunca prendem a requisição principal do usuário.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 16 ROADMAP -->
+<div class="section" id="roadmap">
+  <div class="section-label"><span class="section-num">16</span>Roadmap — V1 e V2</div>
+  <p class="section-lead">O escopo completo da ERU foi dividido em duas entregas: um produto mínimo publicável que já gera valor real, e a versão completa com todas as camadas de gamificação e IA.</p>
+
+  <div class="rm-track">
+    <div class="rm-col v1">
+      <div class="rm-col-head">V1 — Produto Mínimo Publicável</div>
+      <div class="rm-item"><span class="rm-dot">🟤</span>Cadastro e login com detecção de perfil</div>
+      <div class="rm-item"><span class="rm-dot">🟤</span>Categorias e pontos — ciclo semestral básico</div>
+      <div class="rm-item"><span class="rm-dot">🟤</span>Missões diárias e semanais com streak</div>
+      <div class="rm-item"><span class="rm-dot">🟤</span>Prontuário simplificado com registro de atendimento</div>
+      <div class="rm-item"><span class="rm-dot">🟤</span>Feed do salão com aprovação da cliente</div>
+      <div class="rm-item"><span class="rm-dot">🟤</span>Painel Admin com configurações essenciais</div>
+      <div class="rm-item"><span class="rm-dot">🟤</span>Notificações push básicas + sorteio mensal simples</div>
+    </div>
+    <div class="rm-col v2">
+      <div class="rm-col-head">V2 — Escopo Completo</div>
+      <div class="rm-item"><span class="rm-dot">🔷</span>Quiz Relâmpago ao vivo com placar em tempo real</div>
+      <div class="rm-item"><span class="rm-dot">🔷</span>Árvore de Conquistas — 5 ramos, 15 badges</div>
+      <div class="rm-item"><span class="rm-dot">🔷</span>Ranking semestral com premiação</div>
+      <div class="rm-item"><span class="rm-dot">🔷</span>Loja virtual com gateway de pagamento</div>
+      <div class="rm-item"><span class="rm-dot">🔷</span>IA Raya completa — modo cliente e profissional</div>
+      <div class="rm-item"><span class="rm-dot">🔷</span>Relatório semestral "Wrapped" + desafios sazonais</div>
+      <div class="rm-item"><span class="rm-dot">🔷</span>Escalabilidade multi-tenant para venda a outros salões</div>
+    </div>
+  </div>
+</div>
+
+<!-- 17 ESTIMATIVA -->
+<div class="section" id="estimativa">
+  <div class="section-label"><span class="section-num">17</span>Estimativa e prazos</div>
+  <p class="section-lead">Estimativa entregue pelo Marco, considerando a arquitetura híbrida (Replit/Expo no mobile + Lovable no Admin + Supabase no backend), com 1 dia útil equivalente a 7 horas de trabalho.</p>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-lbl">V1 — Esforço total</div>
+      <div class="stat-value" style="font-size:30px">~120h</div>
+      <p class="card-body" style="margin-top:6px">Maior peso no Painel Admin (35h) e em Prontuário &amp; Feed (20h)</p>
+    </div>
+    <div class="card">
+      <div class="card-lbl">V2 — Esforço adicional</div>
+      <div class="stat-value" style="font-size:30px">~125h</div>
+      <p class="card-body" style="margin-top:6px">Maior peso em E-commerce/Pagamentos (30h) e Conquistas (20h)</p>
+    </div>
+  </div>
+
+  <table class="cmp">
+    <tr><th>Cenário de equipe</th><th>Entrega da V1</th><th>Entrega da V2 (a partir da V1)</th><th>Tempo total</th></tr>
+    <tr><td class="dim">Sozinho (1 dev)</td><td>~17 a 18 dias corridos</td><td>+18 a 19 dias corridos</td><td>~35 a 37 dias</td></tr>
+    <tr><td class="dim">Dupla (2 devs)</td><td>~9 a 10 dias corridos</td><td>+9 a 10 dias corridos</td><td>~18 a 20 dias</td></tr>
+  </table>
+
+  <div class="nota nota-gold">
+    <div class="nota-title">Figma no prazo — estimativa qualitativa</div>
+    <p>O Marco estimou cerca de 20% de redução no tempo total de build caso o projeto entre com Figma estruturado, pois a IA do Replit fica mais assertiva na geração de tela com menos interferência humana. Ainda não há um número absoluto separado por fase — ver seção 18 para a decisão de caminho de design.</p>
+  </div>
+</div>
+
+<!-- 18 DESIGN -->
+<div class="section" id="design">
+  <div class="section-label"><span class="section-num">18</span>Caminho de design — Figma, Style Guide ou imagem direta</div>
+  <p class="section-lead">Com a Helen de férias e o peso real de produzir um Figma completo do zero, a equipe está avaliando um caminho intermediário antes de decidir como entrar em produção.</p>
+
+  <div class="swot">
+    <div class="swot-cell o">
+      <div class="swot-head">Opção A — Figma completo</div>
+      <div class="swot-item"><span class="swot-bullet">+</span>Fidelidade pixel-perfect, máximo reaproveitamento de componentes</div>
+      <div class="swot-item"><span class="swot-bullet">−</span>Maior tempo de produção — projeto dentro do projeto, sem a Helen disponível agora</div>
+    </div>
+    <div class="swot-cell t">
+      <div class="swot-head">Opção B — Apenas imagens estáticas (atual)</div>
+      <div class="swot-item"><span class="swot-bullet">+</span>Zero tempo extra de design antes do build</div>
+      <div class="swot-item"><span class="swot-bullet">−</span>IA "adivinha" cores e espaçamentos — risco de inconsistência visual</div>
+    </div>
+  </div>
+
+  <div class="opp-row">
+    <div class="opp-icon" style="background:var(--gold-pale)">💡</div>
+    <div style="flex:1">
+      <div class="opp-title">Opção C — caminho recomendado: Style Guide enxuto + telas-chave</div>
+      <p class="opp-body">Não um Figma completo, mas um documento enxuto com cores exatas, tipografia, espaçamentos e os componentes mais repetidos (botões, cards, navegação), mais as 5 a 6 telas mais complexas desenhadas. Dá à IA do Replit consistência visual suficiente sem o peso de um projeto de design completo. Ferramentas como Galileo AI ou v0 da Vercel podem gerar essa base de telas rapidamente a partir de descrição ou imagens de referência.</p>
+      <span class="opp-tag" style="background:var(--gold-pale);color:var(--gold-dark)">Em discussão com o time</span>
+    </div>
+  </div>
+
+  <div class="nota nota-info">
+    <div class="nota-title">Pergunta aberta para o cliente</div>
+    <p>Vale perguntar diretamente ao Mateus se o salão topa investir cerca de uma semana em design estruturado antes do desenvolvimento começar — o trade-off de tempo costuma compensar em retrabalho evitado, especialmente em um projeto de 29 páginas de especificação.</p>
+  </div>
+</div>
+
+<!-- 19 RISCOS -->
+<div class="section" id="riscos">
+  <div class="section-label"><span class="section-num">19</span>Riscos e mitigações</div>
+  <p class="section-lead">Mapa consolidado dos principais riscos identificados ao longo do discovery e do estudo técnico.</p>
+
+  <div class="risk-list">
+    <div class="risk-row">
+      <span class="risk-sev rs-h">Alto</span>
+      <div><div class="risk-title">Performance em tempo real (Quiz e Ranking)</div><div class="risk-desc">Mitigado pela escolha de app nativo via Replit/Expo com WebSockets estáveis — <strong>não recomendado construir via WebView puro</strong> para este escopo.</div></div>
+    </div>
+    <div class="risk-row">
+      <span class="risk-sev rs-m">Médio</span>
+      <div><div class="risk-title">Peso do design sem Figma estruturado</div><div class="risk-desc">Decisão pendente entre Style Guide enxuto e imagem estática — <strong>impacta diretamente a qualidade e o prazo da V1</strong>.</div></div>
+    </div>
+    <div class="risk-row">
+      <span class="risk-sev rs-m">Médio</span>
+      <div><div class="risk-title">Ansiedade do cliente por velocidade de resposta</div><div class="risk-desc">Cliente avalia outras empresas em paralelo — <strong>mitigar comunicando estimativa por etapas (V1/V2) com transparência</strong>.</div></div>
+    </div>
+    <div class="risk-row">
+      <span class="risk-sev rs-l">Baixo</span>
+      <div><div class="risk-title">Publicação na Apple Store</div><div class="risk-desc">App nativo via Replit/Expo reduz risco de rejeição em comparação ao histórico do Fluxo — <strong>ainda exige atenção a políticas de pagamento in-app</strong>.</div></div>
+    </div>
+    <div class="risk-row">
+      <span class="risk-sev rs-l">Baixo</span>
+      <div><div class="risk-title">Capacidade da equipe — mais uma frente de produto</div><div class="risk-desc">A Listra já está com agenda cheia de produtos — <strong>decisão de entrar ou não depende da disponibilidade real do Marco e do João</strong>.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 20 LEGAL -->
+<div class="section" id="legal">
+  <div class="section-label"><span class="section-num">20</span>Conformidade legal — sorteios e cupons</div>
+  <p class="section-lead">Ponto levantado pelo Gêneses na reunião de alinhamento: distribuição de campanhas e sorteios pode, em determinados contextos, exigir autorização da Caixa Econômica Federal.</p>
+
+  <div class="g2">
+    <div class="card" style="border-top:3px solid var(--green)">
+      <div class="card-title" style="font-size:14.5px">Entendimento da equipe</div>
+      <p class="card-body">O sorteio e os cupons do Raya são mecânicas internas da gamificação do próprio salão — cupons trocados dentro do clube, sem captação externa de cadastro mediante prêmio em dinheiro. Esse modelo, em tese, dispensa o processo formal da Caixa Econômica Federal.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--yellow)">
+      <div class="card-title" style="font-size:14.5px">Pendência de verificação</div>
+      <p class="card-body">A equipe concordou em confirmar essa interpretação antes do início do build. A diretriz acordada é manter o escopo estritamente interno e comunitário — caso o cliente queira mecânicas externas no futuro, isso é tratado como projeto e processo legal apartado.</p>
+    </div>
+  </div>
+
+  <div class="nota nota-caution">
+    <div class="nota-title">Mantém-se o escopo enxuto por princípio, não só por economia</div>
+    <p>A diretriz da Mariana foi clara: minimizar a régua de regras que a Listra assume como responsabilidade legal, evitando avançar para zonas que não são o foco real do cliente — que é fidelização interna, não promoção externa de cadastro.</p>
+  </div>
+</div>
+
+<!-- 21 TIME -->
+<div class="section" id="time">
+  <div class="section-label"><span class="section-num">21</span>Time e papéis</div>
+  <p class="section-lead">Pessoas envolvidas no discovery e na decisão técnica até aqui.</p>
+
+  <div class="g2">
+    <div class="card">
+      <div class="name-tag"><div class="name-av" style="background:var(--black);color:var(--gold)">MC</div><div><div class="name-fullname">Mariana Chebly (Mari)</div><div class="name-role" style="color:var(--text-muted)">Liderança Listra — patrocinadora e relação com o cliente</div></div></div>
+      <p class="card-body">Trouxe a oportunidade via relação pessoal com o Anderson. Avalia se a Listra assume o desenvolvimento e em que condições. Aprovadora final da comunicação com o cliente.</p>
+    </div>
+    <div class="card">
+      <div class="name-tag"><div class="name-av" style="background:var(--blue-bg);color:var(--blue)">LC</div><div><div class="name-fullname">Lívia Couto</div><div class="name-role" style="color:var(--blue)">PO — coordenação do discovery e do estudo técnico</div></div></div>
+      <p class="card-body">Organiza os materiais recebidos do cliente, aciona a equipe técnica, consolida estimativas e mantém a comunicação de status com a Mariana.</p>
+    </div>
+    <div class="card">
+      <div class="name-tag"><div class="name-av" style="background:var(--green-bg);color:var(--green)">WV</div><div><div class="name-fullname">Welder Vieira</div><div class="name-role" style="color:var(--green)">Liderança técnica — viabilidade e qualidade</div></div></div>
+      <p class="card-body">Avaliou viabilidade técnica e legal inicial junto ao Gêneses. Acompanha as próximas etapas de validação e QA.</p>
+    </div>
+    <div class="card">
+      <div class="name-tag"><div class="name-av" style="background:var(--purple-bg);color:var(--purple)">GL</div><div><div class="name-fullname">Gêneses Lopes</div><div class="name-role" style="color:var(--purple)">Infraestrutura e conformidade</div></div></div>
+      <p class="card-body">Levantou a questão legal de sorteios e a importância de servidores no Brasil para latência. Apoia o Marco nas boas práticas técnicas.</p>
+    </div>
+    <div class="card">
+      <div class="name-tag"><div class="name-av" style="background:var(--gold-pale);color:var(--gold-dark)">MA</div><div><div class="name-fullname">Marco Alves</div><div class="name-role" style="color:var(--gold-dark)">Desenvolvimento — estudo técnico e prova de conceito</div></div></div>
+      <p class="card-body">Conduziu o comparativo Lovable vs Replit, executou a prova de conceito de UI no Replit, e entregou a estimativa de horas e prazos por cenário de equipe.</p>
+    </div>
+    <div class="card">
+      <div class="name-tag"><div class="name-av" style="background:var(--cream-dark);color:var(--text-secondary)">JO</div><div><div class="name-fullname">João</div><div class="name-role" style="color:var(--text-muted)">Desenvolvimento — cenário de equipe em dupla</div></div></div>
+      <p class="card-body">Considerado para compor o time de build junto ao Marco, reduzindo o prazo total de ~36 para ~19 dias corridos segundo a estimativa.</p>
+    </div>
+  </div>
+</div>
+
+<!-- 22 PROXIMOS -->
+<div class="section" id="proximos">
+  <div class="section-label"><span class="section-num">22</span>Próximos passos</div>
+  <p class="section-lead">Decisões e comunicações pendentes antes de iniciar qualquer linha de código.</p>
+
+  <div class="g3" style="margin-bottom:18px">
+    <div class="card" style="border-top:4px solid var(--gold)"><div class="card-lbl" style="color:var(--gold-dark)">Lívia Couto</div><div class="card-title" style="font-size:14.5px">Consolidar e comunicar à Mariana</div><p class="card-body">Levar a estimativa final, a recomendação de arquitetura híbrida e o impacto do caminho de design para a Mariana fechar com o cliente.</p></div>
+    <div class="card" style="border-top:4px solid var(--blue)"><div class="card-lbl" style="color:var(--blue)">Equipe</div><div class="card-title" style="font-size:14.5px">Decidir o caminho de design</div><p class="card-body">Style Guide enxuto + telas-chave via IA generativa, versus Figma completo, versus seguir só com as imagens do cliente.</p></div>
+    <div class="card" style="border-top:4px solid var(--green)"><div class="card-lbl" style="color:var(--green)">Mariana</div><div class="card-title" style="font-size:14.5px">Validar disponibilidade da dupla</div><p class="card-body">Confirmar se Marco e João podem assumir o projeto em paralelo, e em que momento, dado o cronograma atual de outros produtos.</p></div>
+  </div>
+
+  <div class="insight">
+    <div class="insight-lbl">Critério de decisão para entrar ou não no projeto</div>
+    <p>Segundo a própria Mariana: o nicho de beleza não tem erro, mas a Listra não pode assumir mais um produto sem clareza de capacidade. A decisão final depende de três fatores combinados — a estimativa de esforço real (que já existe), a disponibilidade da equipe (pendente) e a conversa de expectativas com o cliente sobre entrega por etapas (em andamento).</p>
+  </div>
+
+  <div class="status-banner">
+    <div class="status-dot"></div>
+    <div class="status-text">Da ERU de 29 páginas ao app funcionando. Da indicação pessoal à decisão estruturada — Junho 2026. Critério de avanço: estimativa validada, equipe confirmada, cliente alinhado sobre o caminho de design.</div>
+    <span class="status-badge">Em avaliação</span>
+  </div>
+</div>
+
+<div style="text-align:center;padding:52px 0;border-top:1px solid var(--border-light);margin-top:32px">
+  <div style="font-family:var(--font-display);font-size:30px;font-weight:600;color:var(--text-primary);margin-bottom:7px">RAYA — Discovery v1.0</div>
+  <div style="font-size:12.5px;color:var(--text-muted)">22 seções · Junho 2026 · Uso interno · Listra Digital</div>
+  <div style="font-size:13px;color:var(--gold-dark);font-weight:500;margin-top:6px;font-style:italic">Raro Beauty Club — fidelização, gamificação e inteligência capilar.</div>
+</div>
+
+</div>
+</main>
+
+<script>
+const sections=document.querySelectorAll('.section[id]');
+const navLinks=document.querySelectorAll('.nav-link');
+window.addEventListener('scroll',()=>{
+  let c='';
+  sections.forEach(s=>{if(window.scrollY>=s.offsetTop-80)c=s.id});
+  navLinks.forEach(a=>{a.classList.toggle('active',a.getAttribute('href')==='#'+c)});
+},{passive:true});
+function toggleComp(id){document.getElementById(id).closest('.comp').classList.toggle('open')}
+</script>
+</body>
+</html>
